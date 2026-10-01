@@ -35,7 +35,7 @@ COLONNES_FEATURES = [
 def load_artifacts():
     model = jb.load("best_model.joblib")               # modèle de régression (Linear Regression)
     scaler = jb.load("scaler.joblib")                   # normaliseur (RobustScaler)
-    return model, scaler, activity_encoder
+    return model, scaler
 
 
 model, scaler = load_artifacts()
