@@ -33,7 +33,7 @@ COLONNES_FEATURES = [
 # Chargement des artefacts (mis en cache : chargés une seule fois)
 @st.cache_resource
 def load_artifacts():
-    model = jb.load("best_model.joblib")               # modèle de régression (Linear Regression)
+    model = jb.load("lr_best_model.joblib")               # modèle de régression (Linear Regression)
     scaler = jb.load("scaler.joblib")                   # normaliseur (RobustScaler)
     return model, scaler
 
