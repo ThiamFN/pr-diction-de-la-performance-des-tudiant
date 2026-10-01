@@ -35,19 +35,17 @@ COLONNES_FEATURES = [
 def load_artifacts():
     model = jb.load("best_model.joblib")               # modèle de régression (Linear Regression)
     scaler = jb.load("scaler.joblib")                   # normaliseur (RobustScaler)
-    activity_encoder = jb.load("activity_encoder.joblib")  # encodeur de "Extracurricular Activities"
     return model, scaler, activity_encoder
 
 
-model, scaler, activity_encoder = load_artifacts()
+model, scaler = load_artifacts()
 
+ACTIVITY_MAPPING = {"No": 0, "Yes": 1}
 
 # Fonction de prédiction simple
 def pred_func(valeurs: dict):
     entree = pd.DataFrame([valeurs], columns=COLONNES_FEATURES)
-    entree["Extracurricular Activities"] = activity_encoder.transform(
-        entree["Extracurricular Activities"]
-    )
+    entree["Extracurricular Activities"] = entree["Extracurricular Activities"].map(ACTIVITY_MAPPING)
     x_new = scaler.transform(entree)
     y_pred = model.predict(x_new)
     return float(y_pred[0])
@@ -71,7 +69,7 @@ onglet1, onglet2 = st.tabs(["Prédiction simple", "Prédiction multiple"])
 
 # ----------------------------- Onglet 1 -------------------------------
 with onglet1:
-    st.subheader("Prédire l'indice de performance à partir d'une entrée")
+    st.subheader("Prédire l'indice de performance")
     st.write(DESCRIPTION)
 
     with st.form("formulaire_simple"):
@@ -82,7 +80,7 @@ with onglet1:
             previous_scores = st.number_input("Score précédent", min_value=0, max_value=100, value=70, step=1)
             extracurricular = st.selectbox(
                 "Activités extrascolaires",
-                options=sorted(activity_encoder.classes_),
+                options=list(ACTIVITY_MAPPING.keys()),
             )
 
         with col2:
